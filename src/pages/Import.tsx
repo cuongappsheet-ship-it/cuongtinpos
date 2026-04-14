@@ -13,9 +13,9 @@ export const Import: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   
   const [cart, setCart] = useState<(ImportItem & { hasSerial?: boolean; serials?: string[]; unit?: string; discount?: number; note?: string })[]>(
-    (importDraft?.cart || []).map(item => ({
+    (Array.isArray(importDraft?.cart) ? importDraft.cart : []).map(item => ({
       ...item,
-      serials: Array.isArray(item.serials) ? item.serials : []
+      serials: Array.isArray(item?.serials) ? item.serials : []
     }))
   );
   const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(importDraft?.selectedSupplier || null);
@@ -177,7 +177,7 @@ export const Import: React.FC = () => {
     }
   }, [finalTotal, importDraft?.paid]);
 
-  const handleImport = async () => {
+  const handleImportClick = () => {
     if (cart.length === 0) return alert('Phiếu nhập trống!');
     if (!selectedSupplier) return alert('Vui lòng chọn nhà cung cấp!');
     
@@ -186,75 +186,97 @@ export const Import: React.FC = () => {
         return alert(`Sản phẩm ${item.name} chưa quét mã Serial!`);
       }
     }
+    setShowConfirmModal(true);
+  };
 
-    const now = new Date();
-    const importId = importCode === 'Mã phiếu tự động' ? generateId('NH', importOrders) : importCode;
-    const dateStr = now.toLocaleString('vi-VN');
+  const handleImport = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    setShowConfirmModal(false);
 
-    const order: ImportOrder = {
-      id: importId,
-      date: dateStr,
-      supplier: selectedSupplier.name,
-      status: (finalTotal - paidAmount > 0) ? 'Còn nợ' : 'Hoàn tất',
-      items: cart.map(item => ({
-        id: item.id,
-        name: item.name,
-        qty: item.qty,
-        price: item.price,
-        sn: item.serials,
-        unit: item.unit
-      })),
-      total: finalTotal,
-      paid: paidAmount,
-      debt: finalTotal - paidAmount,
-      discount: overallDiscount,
-      returnCost: returnCost,
-      shippingFee: shippingFee,
-      otherCost: otherCost,
-      note: note
-    };
+    try {
+      const now = new Date();
+      const importId = importCode === 'Mã phiếu tự động' ? generateId('NH', importOrders) : importCode;
+      const dateStr = now.toLocaleString('vi-VN');
 
-    // Update stock and add serials/stock cards
-    for (const item of cart) {
-      const p = products.find(x => x.id === item.id);
-      if (p) {
-        updateProduct(item.id, { 
-          stock: (p.stock || 0) + item.qty,
-          importPrice: item.price 
-        }, true);
-        
-        if (item.hasSerial && item.serials) {
-          for (const sn of item.serials) {
-            addSerial({
-              prodId: item.id,
-              sn,
-              supplier: selectedSupplier.name,
-              importPrice: item.price,
-              date: now.toLocaleDateString('vi-VN'),
-              refId: importId
-            });
+      const order: ImportOrder = {
+        id: importId,
+        date: dateStr,
+        supplier: selectedSupplier.name,
+        status: (finalTotal - paidAmount > 0) ? 'Còn nợ' : 'Hoàn tất',
+        items: cart.map(item => ({
+          id: item.id,
+          name: item.name,
+          qty: item.qty,
+          price: item.price,
+          sn: item.serials,
+          unit: item.unit
+        })),
+        total: finalTotal,
+        paid: paidAmount,
+        debt: finalTotal - paidAmount,
+        discount: overallDiscount,
+        returnCost: returnCost,
+        shippingFee: shippingFee,
+        otherCost: otherCost,
+        note: note
+      };
+
+      // Update stock and add serials/stock cards
+      for (const item of cart) {
+        const p = products.find(x => x.id === item.id);
+        if (p) {
+          updateProduct(item.id, { 
+            stock: (p.stock || 0) + item.qty,
+            importPrice: item.price 
+          }, true);
+          
+          if (item.hasSerial && item.serials) {
+            for (const sn of item.serials) {
+              addSerial({
+                prodId: item.id,
+                sn,
+                supplier: selectedSupplier.name,
+                importPrice: item.price,
+                date: now.toLocaleDateString('vi-VN'),
+                refId: importId
+              });
+            }
           }
         }
       }
-    }
 
-    // Record Cash Transaction if paidAmount > 0
-    if (order.paid > 0) {
-      const transactionId = generateId('PC', cashTransactions);
-      const newTransaction: CashTransaction = {
-        id: transactionId,
-        date: dateStr,
-        type: 'PAYMENT',
-        amount: order.paid,
-        category: 'IMPORT_PAYMENT',
-        partner: selectedSupplier.name,
-        note: `Thanh toán phiếu nhập ${importId}`,
-        refId: importId
-      };
-      addCashTransaction(newTransaction);
-      
-      if (shippingFee > 0) {
-        const shipTransactionId = generateId('PC', [...cashTransactions, newTransaction]);
+      // Record Cash Transaction if paidAmount > 0
+      if (order.paid > 0) {
+        const transactionId = generateId('PC', cashTransactions);
+        const newTransaction: CashTransaction = {
+          id: transactionId,
+          date: dateStr,
+          type: 'PAYMENT',
+          amount: order.paid,
+          category: 'IMPORT_PAYMENT',
+          partner: selectedSupplier.name,
+          note: `Thanh toán phiếu nhập ${importId}`,
+          refId: importId
+        };
+        addCashTransaction(newTransaction);
+        
+        if (shippingFee > 0) {
+          const shipTransactionId = generateId('PC', [...cashTransactions, newTransaction]);
+          const shipTransaction: CashTransaction = {
+            id: shipTransactionId,
+            date: dateStr,
+            type: 'PAYMENT',
+            amount: shippingFee,
+            category: 'OTHER',
+            partner: selectedSupplier.name,
+            note: `Phí vận chuyển phiếu nhập ${importId}`,
+            refId: importId
+          };
+          addCashTransaction(shipTransaction);
+        }
+      } else if (shippingFee > 0) {
+        const shipTransactionId = generateId('PC', cashTransactions);
         const shipTransaction: CashTransaction = {
           id: shipTransactionId,
           date: dateStr,
@@ -267,32 +289,28 @@ export const Import: React.FC = () => {
         };
         addCashTransaction(shipTransaction);
       }
-    } else if (shippingFee > 0) {
-      const shipTransactionId = generateId('PC', cashTransactions);
-      const shipTransaction: CashTransaction = {
-        id: shipTransactionId,
-        date: dateStr,
-        type: 'PAYMENT',
-        amount: shippingFee,
-        category: 'OTHER',
-        partner: selectedSupplier.name,
-        note: `Phí vận chuyển phiếu nhập ${importId}`,
-        refId: importId
-      };
-      addCashTransaction(shipTransaction);
-    }
 
-    addImportOrder(order);
-    setCart([]);
-    setSelectedSupplier(null);
-    setPaidAmount(0);
-    setNote('');
-    setOverallDiscount(0);
-    setReturnCost(0);
-    setShippingFee(0);
-    setOtherCost(0);
-    
-    setShowSuccessModal({ id: importId, total: order.total });
+      await addImportOrder(order);
+      setCart([]);
+      setSelectedSupplier(null);
+      setPaidAmount(0);
+      setNote('');
+      setOverallDiscount(0);
+      setReturnCost(0);
+      setShippingFee(0);
+      setOtherCost(0);
+      setImportCode('Mã phiếu tự động');
+      setOrderCode('');
+      setImportDraft(null);
+      
+      // Navigate to import history after successful import
+      navigate('/import-history');
+    } catch (error) {
+      console.error("Error creating import:", error);
+      alert("Có lỗi xảy ra khi tạo phiếu nhập!");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -817,6 +835,35 @@ export const Import: React.FC = () => {
                   className="w-full bg-slate-100 text-slate-600 py-3.5 rounded-xl font-bold text-sm hover:bg-slate-200 transition-all"
                 >
                   Hủy
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Confirm Modal */}
+      {showConfirmModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+          <div className="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+            <div className="p-6 text-center">
+              <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Info size={32} />
+              </div>
+              <h3 className="text-xl font-black text-slate-800 mb-2">Xác nhận nhập hàng</h3>
+              <p className="text-slate-500 text-sm mb-6">Bạn có chắc chắn muốn hoàn thành phiếu nhập hàng này không?</p>
+              <div className="flex gap-3">
+                <button 
+                  onClick={() => setShowConfirmModal(false)}
+                  className="flex-1 py-3 bg-slate-100 text-slate-600 font-bold rounded-xl hover:bg-slate-200 transition-colors"
+                >
+                  Hủy
+                </button>
+                <button 
+                  onClick={handleImport}
+                  disabled={isSubmitting}
+                  className="flex-1 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-colors shadow-md shadow-blue-200"
+                >
+                  {isSubmitting ? 'Đang xử lý...' : 'Đồng ý'}
                 </button>
               </div>
             </div>
