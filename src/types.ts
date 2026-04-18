@@ -51,9 +51,12 @@ export interface Invoice {
   date: string;
   customer: string;
   phone: string;
+  address?: string;
   total: number;
   paid: number;
   debt: number;
+  oldDebt?: number;
+  totalDebt?: number;
   items: InvoiceItem[];
   discount?: number;
   note?: string;
@@ -82,6 +85,7 @@ export interface ImportOrder {
   shippingFee?: number;
   otherCost?: number;
   note?: string;
+  returned?: boolean;
 }
 
 export interface CashTransaction {
@@ -184,6 +188,25 @@ export interface StockCard {
   sn: string[];
 }
 
+export interface PrintSettings {
+  storeName: string;
+  address: string;
+  phone: string;
+  email: string;
+  bankInfo: string;
+  footNote: string;
+}
+
+export interface ExternalSerial {
+  id: string;
+  date: string;
+  product: string;
+  sn: string;
+  customer?: string;
+  source?: string;
+  createdBy?: string;
+}
+
 export interface AppState {
   currentUser: User | null;
   users: User[];
@@ -198,6 +221,8 @@ export interface AppState {
   maintenanceRecords: MaintenanceRecord[];
   serials: Serial[];
   stockCards: StockCard[];
+  externalSerials: ExternalSerial[];
   posDraft?: POSDraft;
   importDraft?: ImportDraft;
+  printSettings: PrintSettings;
 }

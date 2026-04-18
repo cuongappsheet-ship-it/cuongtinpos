@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Search, Wallet, Calendar, ArrowUpRight, ArrowDownLeft, FileText, Printer, X, Plus } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
-import { formatNumber, parseFormattedNumber } from '../lib/utils';
+import { formatNumber, parseFormattedNumber, parseDateString } from '../lib/utils';
 import { generateId } from '../lib/idUtils';
 import { PrintTemplate } from '../components/PrintTemplate';
 
@@ -36,7 +36,7 @@ export const CashLedger: React.FC = () => {
       const matchesType = filterType === 'ALL' || t.type === filterType;
       return matchesSearch && matchesType;
     })
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    .sort((a, b) => parseDateString(b.date) - parseDateString(a.date));
 
   const totalReceipts = (cashTransactions || [])
     .filter(t => t.type === 'RECEIPT')
@@ -162,8 +162,8 @@ export const CashLedger: React.FC = () => {
                   <td colSpan={6} className="p-10 text-center text-slate-400 italic text-sm">Không tìm thấy giao dịch nào.</td>
                 </tr>
               ) : (
-                filteredTransactions.map(t => (
-                  <tr key={t.id} className="border-b border-slate-100 hover:bg-slate-50/50 transition-colors group">
+                filteredTransactions.map((t, idx) => (
+                  <tr key={`${t.id}-${idx}`} className="border-b border-slate-100 hover:bg-slate-50/50 transition-colors group">
                     <td className="p-4">
                       <span className="font-semibold text-xs text-slate-800 tracking-tight">{t.id}</span>
                     </td>
@@ -216,9 +216,9 @@ export const CashLedger: React.FC = () => {
                 Không tìm thấy giao dịch nào
               </div>
             ) : (
-              filteredTransactions.map(t => (
+              filteredTransactions.map((t, idx) => (
                 <div 
-                  key={t.id} 
+                  key={`${t.id}-${idx}`} 
                   className="p-4 space-y-3 active:bg-slate-50 transition-colors"
                 >
                   <div className="flex justify-between items-start">

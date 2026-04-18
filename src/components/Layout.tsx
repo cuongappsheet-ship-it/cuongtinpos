@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { Search, Truck, Bell, Settings, ChevronDown, ShoppingCart, Home, Box, FileText, Users, Package, History, RotateCcw, ClipboardList, PlusCircle, Tag, ShieldCheck, Wallet, LogOut } from 'lucide-react';
+import { Search, Truck, Bell, Settings, ChevronDown, ShoppingCart, Home, Box, FileText, Users, Package, History, RotateCcw, ClipboardList, PlusCircle, Tag, ShieldCheck, Wallet, LogOut, Menu, ArrowLeftRight, Printer, DollarSign, Wrench } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 
 export const Layout: React.FC = () => {
@@ -9,6 +9,25 @@ export const Layout: React.FC = () => {
   const { currentUser, logout } = useAppContext();
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [showUserMenu, setShowUserMenu] = useState(false);
+
+  const getPageTitle = () => {
+    const currentPath = location.pathname;
+    if (currentPath === '/') return 'Tổng quan';
+    if (currentPath === '/inventory') return 'Hàng hóa';
+    if (currentPath === '/invoices') return 'Hóa đơn';
+    if (currentPath === '/customers') return 'Khách hàng';
+    if (currentPath === '/more') return 'Nhiều hơn';
+    if (currentPath === '/pos') return 'Bán hàng';
+    if (currentPath === '/import') return 'Nhập hàng';
+    if (currentPath === '/suppliers') return 'Đối tác';
+    if (currentPath === '/cash-ledger') return 'Sổ quỹ';
+    if (currentPath === '/reports') return 'Báo cáo';
+    if (currentPath === '/maintenance') return 'Bảo hành';
+    if (currentPath === '/price-settings') return 'Thiết lập giá';
+    if (currentPath === '/users') return 'Người dùng';
+    if (currentPath === '/print-settings') return 'Cài đặt bản in';
+    return 'Hệ thống';
+  };
 
   const handleLogout = () => {
     logout();
@@ -27,7 +46,6 @@ export const Layout: React.FC = () => {
           items: [
             { label: 'Danh sách hàng hóa', path: '/inventory', icon: <Box size={14} /> },
             { label: 'Thiết lập giá', path: '/price-settings', icon: <Tag size={14} /> },
-            { label: 'Bảo hành, bảo trì', path: '/maintenance', icon: <ShieldCheck size={14} />, badge: 'Mới' },
           ]
         }
       ]
@@ -66,6 +84,19 @@ export const Layout: React.FC = () => {
         }
       ]
     },
+    { 
+      label: 'Sau bán hàng', 
+      type: 'dropdown',
+      id: 'sau-ban-hang',
+      sections: [
+        {
+          items: [
+            { label: 'Bảo hành, bảo trì', path: '/maintenance', icon: <ShieldCheck size={14} /> },
+            { label: 'Nhận sửa chữa', path: '/maintenance?type=repair', icon: <Wrench size={14} /> },
+          ]
+        }
+      ]
+    },
     { path: '/cash-ledger', label: 'Sổ quỹ', type: 'link' },
     { path: '/reports', label: 'Báo cáo', type: 'link' },
     ...(currentUser?.role === 'ADMIN' ? [{
@@ -76,7 +107,8 @@ export const Layout: React.FC = () => {
         {
           items: [
             { label: 'Quản lý người dùng', path: '/users', icon: <Users size={14} /> },
-            { label: 'Thiết lập cửa hàng', path: '/', icon: <Settings size={14} /> },
+            { label: 'Cài đặt bản in', path: '/print-settings', icon: <Printer size={14} /> },
+            { label: 'Thiết lập giá', path: '/price-settings', icon: <DollarSign size={14} /> },
           ]
         }
       ]
@@ -85,24 +117,47 @@ export const Layout: React.FC = () => {
 
   const mobileNavItems = [
     { path: '/', label: 'Tổng quan', icon: <Home size={20} /> },
-    { path: '/pos', label: 'Bán hàng', icon: <ShoppingCart size={20} /> },
-    { path: '/import', label: 'Nhập hàng', icon: <Truck size={20} /> },
+    { path: '/inventory', label: 'Hàng hóa', icon: <Box size={20} /> },
     { path: '/invoices', label: 'Hóa đơn', icon: <FileText size={20} /> },
-    { path: '/customers', label: 'Đối tác', icon: <Users size={20} /> }
+    { path: '/customers', label: 'Khách hàng', icon: <Users size={20} /> },
+    { path: '/more', label: 'Nhiều hơn', icon: <Menu size={20} /> }
   ];
 
   return (
-    <div className="min-h-screen bg-[#f4f7fa] text-slate-800 font-sans pb-24 md:pb-0 pt-16 md:pt-[96px] overflow-x-hidden md:overflow-hidden flex flex-col">
+    <div className={`min-h-screen bg-[#f4f7fa] text-slate-800 font-sans print:bg-white print:p-0 ${location.pathname === '/pos' || location.pathname === '/import' ? 'pb-0 pt-0' : 'pb-24 pt-16'} md:pb-0 md:pt-[96px] overflow-x-hidden md:overflow-hidden flex flex-col`}>
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 flex flex-col shadow-sm">
+      <header className={`fixed top-0 left-0 right-0 z-50 flex flex-col shadow-sm print:hidden ${location.pathname === '/pos' || location.pathname === '/import' ? 'hidden md:flex' : ''}`}>
         {/* Top Row */}
         <div className="flex items-center justify-between px-4 md:px-6 h-14 bg-white border-b border-slate-100 relative z-20">
-          <Link to="/" className="flex items-center gap-2 cursor-pointer">
+          {/* Mobile Title */}
+          <div className="md:hidden flex items-center">
+            <h1 className="text-xl font-bold text-slate-800 tracking-tight">{getPageTitle()}</h1>
+          </div>
+
+          <Link to="/" className="hidden md:flex items-center gap-2 cursor-pointer">
             <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center text-white font-bold text-xl shadow-md">C</div>
             <h1 className="font-bold text-blue-700 text-xl hidden md:block">CuongTin ERP</h1>
+            {location.pathname === '/pos' && (
+              <span className="ml-2 px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-bold rounded-md border border-blue-200">
+                Bán hàng
+              </span>
+            )}
           </Link>
           
           <div className="flex items-center gap-4 md:gap-6">
+            {/* Mobile Icons */}
+            <div className="md:hidden flex items-center gap-4 text-slate-500">
+              <button className="p-1 hover:bg-slate-100 rounded-full transition-colors active:scale-90">
+                <Search size={20} />
+              </button>
+              <button className="p-1 hover:bg-slate-100 rounded-full transition-colors active:scale-90">
+                <ArrowLeftRight size={20} className="rotate-90" />
+              </button>
+              <button className="p-1 hover:bg-slate-100 rounded-full transition-colors active:scale-90">
+                <Settings size={20} />
+              </button>
+            </div>
+
             <div className="hidden md:flex relative text-slate-600">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
               <input 
@@ -117,7 +172,7 @@ export const Layout: React.FC = () => {
               <Settings className="cursor-pointer hover:text-blue-600 transition-colors" size={18} />
             </div>
             <div 
-              className="flex items-center gap-2 cursor-pointer md:border-l md:border-slate-200 md:pl-4 relative"
+              className="hidden md:flex items-center gap-2 cursor-pointer md:border-l md:border-slate-200 md:pl-4 relative"
               onClick={() => setShowUserMenu(!showUserMenu)}
             >
             <div className="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center text-blue-600 font-bold text-xs border border-blue-100">
@@ -213,7 +268,7 @@ export const Layout: React.FC = () => {
       </main>
 
       {/* Mobile Bottom Nav */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-100 h-[68px] flex justify-around items-center px-1 z-50 md:hidden shadow-[0_-4px_12px_rgba(0,0,0,0.05)]">
+      <nav className={`fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-100 h-[68px] flex justify-around items-center px-1 z-50 md:hidden shadow-[0_-4px_12px_rgba(0,0,0,0.05)] print:hidden ${location.pathname === '/pos' || location.pathname === '/import' ? 'hidden' : ''}`}>
         {mobileNavItems.map(item => (
           <Link
             key={item.path}
