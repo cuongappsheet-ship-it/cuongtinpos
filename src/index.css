@@ -1,29 +1,48 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", "Be Vietnam Pro", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Nunito", ui-sans-serif, system-ui, sans-serif;
+  
+  --color-primary-50: #eff6ff;
+  --color-primary-100: #dbeafe;
+  --color-primary-500: #3b82f6;
+  --color-primary-600: #2563eb;
+  
+  --color-success-500: #22c55e;
+  --color-success-600: #16a34a;
+  
+  --color-danger-500: #ef4444;
+  --color-danger-600: #dc2626;
+
+  --color-warning-400: #facc15;
+  --color-warning-500: #eab308;
 }
 
-@layer base {
-  body {
-    @apply font-sans antialiased text-slate-900;
-  }
+body {
+  font-family: var(--font-sans);
+  margin: 0;
+  height: 100vh;
 }
 
-@media print {
-  body * {
-    visibility: hidden;
-  }
-  #print-section, #print-section * {
-    visibility: visible;
-  }
-  #print-section {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    margin: 0;
-    padding: 20px;
-  }
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.bg-polka {
+  background-color: #f7f9fc;
+  background-image: radial-gradient(#d3dce6 15%, transparent 16%), radial-gradient(#fce4d6 15%, transparent 16%);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
 }
