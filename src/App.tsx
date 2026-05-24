@@ -80,8 +80,8 @@ export default function App() {
 
   // Form Field states
   const [studentName, setStudentName] = useState('');
-  const [studentDob, setStudentDob] = useState('2020-05-15');
-  const [studentGender, setStudentGender] = useState('Nam');
+  const [studentDob, setStudentDob] = useState('');
+  const [studentGender, setStudentGender] = useState('');
   const [studentSchool, setStudentSchool] = useState('');
   const [studentArea, setStudentArea] = useState('');
   const [studentPob, setStudentPob] = useState('');
@@ -116,6 +116,15 @@ export default function App() {
   const [successData, setSuccessData] = useState<Registration | null>(null);
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState<ToastMessage | null>(null);
+
+  // Navigation handler to smoothly scroll
+  const handleNavClick = (sectionId: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    setTimeout(() => {
+      document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+    }, 50);
+    setMobileMenuOpen(false);
+  };
 
   // Countdown clock state
   const [countdown, setCountdown] = useState({
@@ -531,72 +540,19 @@ export default function App() {
               </div>
             </div>
 
-            {/* Desktop Navigation Menu */}
-            <nav className="hidden lg:flex items-center space-x-6">
-              <a href="#trang-chu" className="text-xs font-bold uppercase tracking-wider text-slate-600 hover:text-blue-600 transition-colors">Trang chủ</a>
-              <a href="#ke-hoach" className="text-xs font-bold uppercase tracking-wider text-slate-600 hover:text-blue-600 transition-colors">Chỉ tiêu & Địa bàn</a>
-              <a href="#huong-dan-ho-so" className="text-xs font-bold uppercase tracking-wider text-slate-600 hover:text-blue-600 transition-colors">Hồ sơ dự tuyển</a>
-              <a href="#dang-ky-tuyen-sinh" className="text-xs font-bold uppercase tracking-wider text-slate-600 hover:text-orange-600 transition-colors">Đăng ký online</a>
-              <a href="#tra-cuu" className="text-xs font-bold uppercase tracking-wider text-slate-600 hover:text-blue-600 transition-colors">Tra cứu hồ sơ</a>
-            </nav>
-
-            {/* Actions & Mobile Menu Trigger */}
+            {/* Actions */}
             <div className="flex items-center space-x-1.5">
               {/* CTA Button */}
               <a 
                 href="#dang-ky-tuyen-sinh" 
-                className="hidden sm:inline-flex items-center justify-center px-4 py-2.5 text-xs font-extrabold uppercase tracking-wider text-white bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 active:scale-95 transition-all rounded-xl shadow-md shadow-orange-100"
+                onClick={(e) => handleNavClick('dang-ky-tuyen-sinh', e)}
+                className="inline-flex items-center justify-center px-3 py-2 sm:px-4 sm:py-2.5 text-[10px] sm:text-xs font-extrabold uppercase tracking-wider text-white bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 active:scale-95 transition-all rounded-xl shadow-md shadow-orange-100"
               >
                 Nộp Hồ Sơ
               </a>
-              
-              {/* Admin Dashboard Button */}
-              <button 
-                id="admin-toggle-btn" 
-                onClick={handleAdminToggle} 
-                className="px-2.5 py-2.5 lg:px-3 text-xs font-bold uppercase tracking-wider text-slate-600 hover:text-blue-600 border border-slate-200 hover:border-blue-200 rounded-xl flex items-center gap-1.5 transition-all"
-              >
-                {isAdminLoggedIn ? (
-                  <Check className="w-4 h-4 text-emerald-500 shrink-0" />
-                ) : (
-                  <Lock className="w-4 h-4 text-blue-600 shrink-0" />
-                )}
-                <span id="admin-btn-label" className="hidden md:inline">
-                  {isAdminLoggedIn ? "Cán Bộ (Đang online)" : "Ban Tuyển Sinh"}
-                </span>
-              </button>
-
-              {/* Hamburger Button */}
-              <button 
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)} 
-                className="lg:hidden p-2.5 text-slate-700 hover:bg-slate-100 rounded-xl transition-all focus:outline-none" 
-                aria-label="Menu di động"
-              >
-                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </button>
             </div>
           </div>
         </div>
-
-        {/* Mobile Dropdown Navigation */}
-        {mobileMenuOpen && (
-          <div id="mobile-menu" className="lg:hidden bg-white border-t border-slate-100 px-4 py-3 space-y-1 shadow-inner">
-            <a href="#trang-chu" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:text-blue-600 rounded-xl transition-all">Trang chủ</a>
-            <a href="#ke-hoach" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:text-blue-600 rounded-xl transition-all">Chỉ tiêu & Địa bàn</a>
-            <a href="#huong-dan-ho-so" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:text-blue-600 rounded-xl transition-all">Hồ sơ dự tuyển</a>
-            <a href="#dang-ky-tuyen-sinh" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:text-orange-600 rounded-xl transition-all">Đăng ký online</a>
-            <a href="#tra-cuu" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:text-blue-600 rounded-xl transition-all">Tra cứu hồ sơ</a>
-            <div className="pt-2 border-t border-slate-100 mt-2">
-              <a 
-                href="#dang-ky-tuyen-sinh" 
-                onClick={() => setMobileMenuOpen(false)} 
-                className="w-full inline-flex items-center justify-center py-2.5 text-xs font-extrabold uppercase tracking-wider text-white bg-orange-500 rounded-xl shadow-md"
-              >
-                Bắt đầu nộp hồ sơ
-              </a>
-            </div>
-          </div>
-        )}
       </header>
 
       {/* Banner-Style Hero Section */}
@@ -653,6 +609,18 @@ export default function App() {
                   <p className="text-[10px] text-slate-400 mt-0.5">(Hệ thống tự động đóng cổng sau thời gian này)</p>
                 </div>
 
+                {/* Nộp hồ sơ trực tiếp Block */}
+                <div className="bg-amber-50 rounded-2xl p-4 border border-amber-200/60 text-slate-800 space-y-1.5 text-left shadow-sm">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-orange-500 shrink-0"></span>
+                    <h4 className="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-orange-700">Nộp hồ sơ trực tiếp</h4>
+                  </div>
+                  <p className="text-sm font-black text-slate-900">Từ ngày 25/06 đến hết 30/06/2026</p>
+                  <p className="text-[11px] sm:text-xs text-slate-600 leading-relaxed font-medium">
+                    Nộp đối chiếu hồ sơ trực tiếp vào buổi sáng các ngày trong tuần tại 2 điểm trường do ban tuyển sinh tiếp nhận.
+                  </p>
+                </div>
+
                 {/* Countdown Clock UI */}
                 <div id="countdown-timer" className="grid grid-cols-4 gap-1.5 text-center">
                   <div className="bg-orange-50/70 py-2.5 px-1 rounded-xl border border-orange-100/50">
@@ -701,212 +669,6 @@ export default function App() {
         </div>
       </section>
 
-      {/* Section 1: Chỉ tiêu & Địa bàn */}
-      <section id="ke-hoach" className="py-12 sm:py-16 bg-white border-b border-slate-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12 space-y-1.5">
-            <span className="text-xs font-extrabold uppercase tracking-widest text-orange-600">Mục 1 trên thông báo</span>
-            <h3 className="font-header text-2xl sm:text-4xl font-extrabold text-blue-900">Chỉ Tiêu & Địa Bàn Tuyển Sinh</h3>
-            <p className="text-xs sm:text-sm text-slate-500">Phân bổ nguồn tuyển sinh mẫu giáo 5 tuổi và phân vùng các thôn trong địa bàn xã.</p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
-              
-            {/* Left panel: Chỉ tiêu 120 trẻ */}
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50/50 rounded-3xl p-5 sm:p-8 border border-blue-100 flex flex-col justify-between shadow-sm">
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center font-black text-lg shrink-0">120</div>
-                  <div>
-                    <h4 className="font-header text-base sm:text-lg font-bold text-blue-950">Tổng chỉ tiêu tuyển sinh</h4>
-                    <p className="text-[11px] sm:text-xs text-slate-500">Trẻ mẫu giáo 5 tuổi hoàn thành chương trình mầm non</p>
-                  </div>
-                </div>
-
-                <hr className="border-blue-100" />
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                  <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-blue-100/60 shadow-sm space-y-2">
-                    <div className="flex justify-between items-center text-xs sm:text-sm">
-                      <span className="font-bold text-slate-700">Mầm non Vành Khuyên</span>
-                      <span className="font-black text-blue-600">57 trẻ</span>
-                    </div>
-                    <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                      <div className="bg-blue-600 h-2 rounded-full" style={{ width: '47.5%' }}></div>
-                    </div>
-                  </div>
-
-                  <div className="bg-white p-3.5 sm:p-4 rounded-2xl border border-blue-100/60 shadow-sm space-y-2">
-                    <div className="flex justify-between items-center text-xs sm:text-sm">
-                      <span className="font-bold text-slate-700">Mầm non Hoạ My</span>
-                      <span className="font-black text-indigo-600">63 trẻ</span>
-                    </div>
-                    <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                      <div className="bg-indigo-600 h-2 rounded-full" style={{ width: '52.5%' }}></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-5 p-3 bg-white rounded-xl border border-blue-100 text-[10px] sm:text-[11px] text-slate-500 flex gap-2">
-                <Info className="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
-                <span>Nhà trường cam kết chuẩn bị đầy đủ cơ sở vật chất, phòng học khang trang và đội ngũ giáo viên đón trẻ 5 tuổi.</span>
-              </div>
-            </div>
-
-            {/* Right panel: Địa bàn thôn quy định */}
-            <div className="bg-slate-50 rounded-3xl p-5 sm:p-8 border border-slate-200/80 flex flex-col justify-between shadow-sm">
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center shrink-0">
-                    <MapPin className="w-6 h-6 text-orange-600" />
-                  </div>
-                  <div>
-                    <h4 className="font-header text-base sm:text-lg font-bold text-slate-900">Các thôn / địa bàn tuyển sinh</h4>
-                    <p className="text-[11px] sm:text-xs text-slate-500">Học sinh thuộc danh sách phân bố cư trú bên dưới:</p>
-                  </div>
-                </div>
-
-                <hr className="border-slate-200" />
-
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  <div className="bg-white px-2.5 py-2 rounded-xl border border-slate-200 text-[11px] sm:text-xs font-bold text-slate-700 flex items-center gap-1.5 shadow-sm">
-                    <span className="w-2 h-2 rounded-full bg-orange-500 shrink-0"></span>
-                    Thôn Đắk Sơn
-                  </div>
-                  <div className="bg-white px-2.5 py-2 rounded-xl border border-slate-200 text-[11px] sm:text-xs font-bold text-slate-700 flex items-center gap-1.5 shadow-sm">
-                    <span className="w-2 h-2 rounded-full bg-orange-500 shrink-0"></span>
-                    Bon buJy
-                  </div>
-                  <div className="bg-white px-2.5 py-2 rounded-xl border border-slate-200 text-[11px] sm:text-xs font-bold text-slate-700 flex items-center gap-1.5 shadow-sm">
-                    <span className="w-2 h-2 rounded-full bg-orange-500 shrink-0"></span>
-                    Hà Nam Ninh
-                  </div>
-                  <div className="bg-white px-2.5 py-2 rounded-xl border border-slate-200 text-[11px] sm:text-xs font-bold text-slate-700 flex items-center gap-1.5 shadow-sm">
-                    <span className="w-2 h-2 rounded-full bg-orange-500 shrink-0"></span>
-                    Thôn Tân Bình
-                  </div>
-                  <div className="bg-white px-2.5 py-2 rounded-xl border border-slate-200 text-[11px] sm:text-xs font-bold text-slate-700 flex items-center gap-1.5 shadow-sm">
-                    <span className="w-2 h-2 rounded-full bg-orange-500 shrink-0"></span>
-                    Thôn Rừng Lạnh
-                  </div>
-                  <div className="bg-orange-50 px-2.5 py-2 rounded-xl border border-orange-200 text-[11px] sm:text-xs font-bold text-orange-700 flex items-center gap-1.5 shadow-sm">
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-600 shrink-0"></span>
-                    Nơi khác...
-                  </div>
-                </div>
-              </div>
-
-              <p className="mt-4 text-[10px] sm:text-[11px] text-slate-400 italic">
-                * Trẻ ở các khu vực lân cận (&quot;Nơi khác&quot;) vẫn có thể làm hồ sơ trực tuyến để nhà trường xem xét phê duyệt dựa trên lượng chỉ tiêu dự phòng thực tế.
-              </p>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* Section 2: Hồ sơ dự tuyển */}
-      <section id="huong-dan-ho-so" className="py-12 sm:py-16 bg-slate-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-              
-            {/* Detailed requirements */}
-            <div className="lg:col-span-7 space-y-5">
-              <span className="text-xs font-extrabold uppercase tracking-widest text-orange-600 block">Mục 2 trên thông báo</span>
-              <h3 className="font-header text-2xl sm:text-4xl font-extrabold text-blue-900 leading-tight">Hồ Sơ Dự Tuyển Cần Chuẩn Bị</h3>
-              <p className="text-slate-600 text-xs sm:text-sm">
-                Khi nộp hồ sơ, quý phụ huynh vui lòng khai báo tình trạng chuẩn bị các loại giấy tờ bắt buộc sau đây trên hệ thống trực tuyến, sau đó nộp bổ sung bản giấy đối chiếu tại trường:
-              </p>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                {/* Doc 1 */}
-                <div className="bg-white p-4 rounded-2xl border border-slate-200/70 shadow-sm flex items-start gap-3">
-                  <span className="w-7 h-7 bg-orange-100 text-orange-700 rounded-lg flex items-center justify-center font-bold text-xs shrink-0">1</span>
-                  <div className="flex-1 min-w-0">
-                    <h5 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Đơn xin học lớp 1</h5>
-                    <p className="text-[10px] sm:text-[11px] text-slate-500 mt-1">Viết tay hoặc điền theo mẫu chuẩn ban hành của trường TH Lương Thế Vinh.</p>
-                    <button 
-                      onClick={downloadSampleApplicationForm} 
-                      className="mt-2 text-[10px] font-bold text-blue-600 hover:underline flex items-center gap-1 min-h-[32px]"
-                    >
-                      <FileText className="w-3.5 h-3.5" />
-                      Tải mẫu đơn chuẩn (.txt)
-                    </button>
-                  </div>
-                </div>
-
-                {/* Doc 2 */}
-                <div className="bg-white p-4 rounded-2xl border border-slate-200/70 shadow-sm flex items-start gap-3">
-                  <span className="w-7 h-7 bg-orange-100 text-orange-700 rounded-lg flex items-center justify-center font-bold text-xs shrink-0">2</span>
-                  <div>
-                    <h5 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Bản sao Giấy khai sinh</h5>
-                    <p className="text-[10px] sm:text-[11px] text-slate-500 mt-1">Bản sao hợp lệ (bản sao trích lục từ sổ gốc hoặc bản sao có chứng thực).</p>
-                  </div>
-                </div>
-
-                {/* Doc 3 */}
-                <div className="bg-white p-4 rounded-2xl border border-slate-200/70 shadow-sm flex items-start gap-3">
-                  <span className="w-7 h-7 bg-orange-100 text-orange-700 rounded-lg flex items-center justify-center font-bold text-xs shrink-0">3</span>
-                  <div>
-                    <h5 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Giấy CN hoàn thành MN</h5>
-                    <p className="text-[10px] sm:text-[11px] text-slate-500 mt-1">Xác nhận hoàn thành chương trình Mầm non 5 tuổi (Vành Khuyên hoặc Hoạ My).</p>
-                  </div>
-                </div>
-
-                {/* Doc 4 */}
-                <div className="bg-white p-4 rounded-2xl border border-slate-200/10 shadow-sm flex items-start gap-3 ring-2 ring-orange-500/10">
-                  <span className="w-7 h-7 bg-orange-500 text-white rounded-lg flex items-center justify-center font-bold text-xs shrink-0">4</span>
-                  <div>
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                      <h5 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Sổ tiêm chủng photo</h5>
-                      <span className="px-1 py-0.5 rounded bg-orange-500 text-[8px] font-black text-white">YÊU CẦU</span>
-                    </div>
-                    <p className="text-[10px] sm:text-[11px] text-slate-500 mt-1">Bản photo các trang thông tin tiêm chủng đã thực hiện của bé.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Section 3: Thời gian & Hình thức */}
-            <div className="lg:col-span-5 bg-gradient-to-br from-orange-500 to-amber-500 text-white p-5 sm:p-8 rounded-3xl shadow-lg relative overflow-hidden">
-              <div className="absolute -right-12 -top-12 w-40 h-40 bg-white/10 rounded-full"></div>
-              
-              <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider bg-white/20 text-white px-2.5 py-1 rounded-full inline-block">Mục 3 trên thông báo</span>
-              <h4 className="font-header text-lg sm:text-2xl font-black mt-2 mb-4 sm:mb-6">Thời Gian & Hình Thức Tuyển Sinh</h4>
-
-              <div className="space-y-4 sm:space-y-6">
-                {/* Online card */}
-                <div className="bg-white/10 border border-white/25 rounded-2xl p-3.5 space-y-1.5">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <h5 className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-amber-100">Đăng ký trực tuyến</h5>
-                  </div>
-                  <p className="text-sm font-bold">Từ nay đến hết ngày 24/06/2026</p>
-                  <p className="text-[11px] sm:text-xs text-orange-950 bg-white/90 p-2.5 rounded-xl leading-relaxed">
-                    Phụ huynh truy cập cổng tuyển sinh trực tuyến để đăng ký 24/7 (kể cả thứ Bảy và Chủ nhật).
-                  </p>
-                </div>
-
-                {/* Direct card */}
-                <div className="bg-white/10 border border-white/25 rounded-2xl p-3.5 space-y-1.5">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-white"></span>
-                    <h5 className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-amber-100">Nộp hồ sơ trực tiếp</h5>
-                  </div>
-                  <p className="text-sm font-bold">Từ ngày 25/06 đến hết 30/06/2026</p>
-                  <p className="text-[11px] sm:text-xs text-orange-100 leading-normal">
-                    Nộp đối chiếu hồ sơ trực tiếp vào buổi sáng các ngày trong tuần tại 2 điểm trường do ban tuyển sinh tiếp nhận.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* Multi-step Online Registration Portal */}
       <section id="dang-ky-tuyen-sinh" className="py-12 sm:py-16 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-8 space-y-1.5">
@@ -1010,7 +772,7 @@ export default function App() {
                           value={studentName}
                           onChange={(e) => setStudentName(e.target.value)}
                           required 
-                          placeholder="Nguyễn Minh Khang" 
+                          placeholder="" 
                           className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-base sm:text-sm outline-none transition-all min-h-[46px]" 
                         />
                       </div>
@@ -1040,6 +802,7 @@ export default function App() {
                           required 
                           className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-base sm:text-sm outline-none transition-all min-h-[46px]"
                         >
+                          <option value="">-- Chọn giới tính --</option>
                           <option value="Nam">Nam</option>
                           <option value="Nữ">Nữ</option>
                         </select>
@@ -1448,336 +1211,9 @@ export default function App() {
         </div>
       </section>
 
-      {/* Lookup Progress Status Section */}
-      <section id="tra-cuu" className="py-12 sm:py-16 bg-slate-100 border-t border-slate-200/55">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6">
-          <div className="text-center mb-6 sm:mb-8 space-y-1.5">
-            <span className="text-xs font-extrabold uppercase tracking-widest text-orange-600 block">TIẾN ĐỘ THẨM ĐỊNH</span>
-            <h3 className="font-header text-2xl sm:text-3xl font-extrabold text-blue-900">Tra Cứu Kết Quả Hồ Sơ</h3>
-            <p className="text-xs sm:text-sm text-slate-500">Phụ huynh nhập Số điện thoại hoặc Họ tên học sinh để xem tiến độ phê duyệt từ nhà trường.</p>
-          </div>
 
-          {/* Search Area */}
-          <div className="bg-white p-4 sm:p-5 rounded-3xl border border-slate-200 shadow-md">
-            <div className="flex flex-col sm:flex-row gap-2">
-              <div className="relative flex-1">
-                <Search className="absolute left-4 top-4 w-4 h-4 text-slate-400" />
-                <input 
-                  type="text" 
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Nhập Số điện thoại (Ví dụ: 0945044132) hoặc tên bé..." 
-                  className="w-full pl-10 pr-4 py-3.5 bg-slate-50 rounded-xl outline-none focus:ring-2 focus:ring-orange-500 text-base sm:text-sm transition-all border border-slate-100 min-h-[46px]" 
-                />
-              </div>
-              <button 
-                onClick={performLookupQuery} 
-                className="w-full sm:w-auto px-5 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-md flex items-center justify-center gap-1 min-h-[44px]"
-              >
-                Tra cứu kết quả
-              </button>
-            </div>
 
-            {/* Live Results */}
-            {searchedRecords !== null && (
-              <div id="lookup-results-container" className="mt-6 pt-5 border-t border-slate-100">
-                <h5 className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Kết quả tìm thấy ({searchedRecords.length}):</h5>
-                
-                <div id="lookup-results-list" className="space-y-3">
-                  {searchedRecords.length === 0 ? (
-                    <div className="p-5 bg-slate-50 border border-slate-200 rounded-2xl text-center space-y-1">
-                      <AlertTriangle className="w-8 h-8 text-slate-400 mx-auto" />
-                      <p className="text-xs font-bold text-slate-700">Không tìm thấy hồ sơ phù hợp</p>
-                      <p className="text-[10px] text-slate-400">Vui lòng kiểm tra lại Số điện thoại hoặc tên bé chính xác.</p>
-                    </div>
-                  ) : (
-                    searchedRecords.map((item) => {
-                      const badgeBg = item.status === 'Đã phê duyệt' 
-                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200' 
-                        : item.status === 'Cần bổ sung hồ sơ' 
-                        ? 'bg-rose-50 text-rose-700 border-rose-200' 
-                        : 'bg-blue-50 text-blue-700 border-blue-200';
 
-                      return (
-                        <div key={item.id} className="p-4 bg-slate-50 border border-slate-200 rounded-2xl space-y-2.5 shadow-sm text-xs">
-                          <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-1.5 border-b border-slate-200 pb-2">
-                            <div>
-                              <span className="text-[9px] text-slate-400 font-bold uppercase block">Mã Hồ Sơ</span>
-                              <span className="font-extrabold text-blue-600 text-sm">{item.id}</span>
-                            </div>
-                            <div>
-                              <span className={`inline-block px-2.5 py-1 rounded-full font-bold border ${badgeBg}`}>
-                                {item.status}
-                              </span>
-                            </div>
-                          </div>
-                          
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5 text-slate-600 text-[11px] sm:text-xs">
-                            <p><span className="font-semibold text-slate-900">Học sinh:</span> {item.studentName}</p>
-                            <p><span className="font-semibold text-slate-900">Ngày sinh:</span> {item.studentDob}</p>
-                            <p><span className="font-semibold text-slate-900">Trường MN:</span> {item.studentSchool}</p>
-                            <p><span className="font-semibold text-slate-900">Địa bàn thôn:</span> {item.studentArea}</p>
-                            <p className="sm:col-span-2">
-                              <span className="font-semibold text-slate-900">Người đăng ký:</span> {item.parentName} ({item.parentRelation}) - SĐT: {item.parentPhone}
-                            </p>
-                          </div>
-
-                          <div className="pt-2 border-t border-slate-100 flex flex-wrap gap-1.5 text-[10px]">
-                            <span className={`px-2 py-0.5 rounded border ${
-                              item.birthCert === 'Có' ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-amber-50 text-amber-700 border-amber-100'
-                            }`}>
-                              Khai sinh: {item.birthCert}
-                            </span>
-                            <span className={`px-2 py-0.5 rounded border ${
-                              item.preschoolCert === 'Có' ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-amber-50 text-amber-700 border-amber-100'
-                            }`}>
-                              Mầm non: {item.preschoolCert}
-                            </span>
-                            <span className={`px-2 py-0.5 rounded border ${
-                              item.vaccine === 'Có' ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-amber-50 text-amber-700 border-amber-100'
-                            }`}>
-                              Tiêm chủng: {item.vaccine}
-                            </span>
-                          </div>
-                        </div>
-                      );
-                    })
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* Admin Panel Control for School staff */}
-      {isAdminLoggedIn && adminPanelVisible && (
-        <section id="admin-panel" className="py-12 sm:py-16 bg-slate-950 text-white border-t border-slate-900">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 border-b border-slate-800 pb-5 items-start">
-              <div>
-                <span className="text-xs font-bold text-orange-400 uppercase tracking-widest block">Dành Cho Ban Tuyển Sinh</span>
-                <h3 className="font-header text-xl sm:text-3xl font-extrabold tracking-tight text-white">Thẩm Định & Phê Duyệt Hồ Sơ</h3>
-                <p className="text-xs text-slate-400 mt-1">Cán bộ tuyển sinh kiểm tra các thông tin mầm non, giấy khai sinh và sổ tiêm chủng của bé.</p>
-              </div>
-              <div className="flex flex-wrap items-center gap-2">
-                {/* Session indicator & Logout button */}
-                <span id="session-time-indicator" className="text-xs text-emerald-400 bg-emerald-950/60 px-3 py-1.5 rounded-xl border border-emerald-500/20 font-medium">
-                  Phiên đăng nhập: 8 tiếng
-                </span>
-                <button 
-                  onClick={handleAdminLogout} 
-                  className="px-3 py-2 text-[10px] font-bold uppercase tracking-wider bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl transition-all min-h-[36px] flex items-center gap-1 cursor-pointer"
-                >
-                  <LogOut className="w-3.5 h-3.5" />
-                  Đăng xuất
-                </button>
-                <button 
-                  onClick={resetAllDatabase} 
-                  className="px-3 py-2 text-[10px] font-bold uppercase tracking-wider bg-rose-600/10 hover:bg-rose-600 text-rose-400 hover:text-white border border-rose-500/10 rounded-xl transition-all min-h-[36px] cursor-pointer"
-                >
-                  Reset dữ liệu
-                </button>
-                <button 
-                  onClick={() => setAdminPanelVisible(false)} 
-                  className="px-3 py-2 text-[10px] font-bold uppercase tracking-wider bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl transition-all min-h-[36px] cursor-pointer"
-                >
-                  Ẩn Bảng
-                </button>
-              </div>
-            </div>
-
-            {/* Stats dashboard */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 mb-6">
-              <div className="bg-slate-900 p-3.5 rounded-2xl border border-slate-800">
-                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Hồ Sơ Nhận</span>
-                <span id="admin-total-submissions" className="text-xl sm:text-2xl font-black text-white mt-1 block">{totalSubmissions}</span>
-              </div>
-              <div className="bg-slate-900 p-3.5 rounded-2xl border border-slate-800">
-                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Chờ Kiểm Tra</span>
-                <span id="admin-pending-submissions" className="text-xl sm:text-2xl font-black text-orange-400 mt-1 block">{pendingSubmissions}</span>
-              </div>
-              <div className="bg-slate-900 p-3.5 rounded-2xl border border-slate-800">
-                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Chỉ Tiêu Lớp 1</span>
-                <span className="text-xl sm:text-2xl font-black text-blue-400 mt-1 block">120</span>
-              </div>
-              <div className="bg-slate-900 p-3.5 rounded-2xl border border-slate-800">
-                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Tiến Độ Chỉ Tiêu</span>
-                <span id="admin-progress-pct" className="text-xl sm:text-2xl font-black text-emerald-400 mt-1 block">{progressPercent}%</span>
-              </div>
-            </div>
-
-            {/* Applicant List responsive switch */}
-            <div className="bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden">
-              <div className="p-4 border-b border-slate-800 flex justify-between items-center bg-slate-950/50">
-                <h4 className="text-xs sm:text-sm font-bold text-white uppercase tracking-wider">Danh Sách Học Sinh Đăng Ký</h4>
-              </div>
-              
-              {/* Desktop Layout: Table View (Hidden on mobile) */}
-              <div className="hidden lg:block overflow-x-auto">
-                <table className="w-full text-left border-collapse text-xs">
-                  <thead>
-                    <tr className="bg-slate-950 text-slate-400 font-bold border-b border-slate-800">
-                      <th className="p-3">Mã hồ sơ</th>
-                      <th className="p-3">Học sinh</th>
-                      <th className="p-3">Mầm non / Cư trú</th>
-                      <th className="p-3">Người giám hộ / SĐT</th>
-                      <th className="p-3">Trạng thái hồ sơ</th>
-                      <th className="p-3">Trạng thái duyệt</th>
-                      <th className="p-3 text-right">Thao tác phê duyệt</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-800 text-slate-300">
-                    {registrations.length === 0 ? (
-                      <tr>
-                        <td colSpan={7} className="p-6 text-center text-slate-500">Chưa có hồ sơ tuyển sinh nào trực tuyến.</td>
-                      </tr>
-                    ) : (
-                      registrations.map((item) => {
-                        const isApproved = item.status === 'Đã phê duyệt';
-                        const isWarning = item.status === 'Cần bổ sung hồ sơ';
-
-                        return (
-                          <tr key={item.id} className="hover:bg-slate-900/40 transition-colors">
-                            <td className="p-3 font-mono font-bold text-blue-400">{item.id}</td>
-                            <td className="p-3">
-                              <span className="block font-bold text-white">{item.studentName}</span>
-                              <span className="text-[10px] text-slate-500">Sinh ngày: {item.studentDob} | Giới tính: {item.studentGender}</span>
-                            </td>
-                            <td className="p-3">
-                              <span className="block text-slate-300 font-medium">{item.studentSchool || 'Chưa rõ'}</span>
-                              <span className="text-[10px] text-orange-400 font-bold">{item.studentArea}</span>
-                            </td>
-                            <td className="p-3">
-                              <span className="block text-slate-300">{item.parentName} ({item.parentRelation})</span>
-                              <span className="text-[10px] text-slate-500">SĐT: {item.parentPhone}</span>
-                            </td>
-                            <td className="p-3">
-                              <div className="flex flex-col gap-1">
-                                <span className={`px-1.5 py-0.5 rounded text-[9px] font-semibold border ${
-                                  item.birthCert === 'Có' ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20' : 'bg-amber-500/10 text-amber-300 border-amber-500/20'
-                                }`}>
-                                  Khai sinh: {item.birthCert}
-                                </span>
-                                <span className={`px-1.5 py-0.5 rounded text-[9px] font-semibold border ${
-                                  item.preschoolCert === 'Có' ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20' : 'bg-amber-500/10 text-amber-300 border-amber-500/20'
-                                }`}>
-                                  Mầm non: {item.preschoolCert}
-                                </span>
-                                <span className={`px-1.5 py-0.5 rounded text-[9px] font-semibold border ${
-                                  item.vaccine === 'Có' ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20' : 'bg-amber-500/10 text-amber-300 border-amber-500/20'
-                                }`}>
-                                  Tiêm chủng: {item.vaccine}
-                                </span>
-                              </div>
-                            </td>
-                            <td className="p-3">
-                              {isApproved ? (
-                                <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[9px] font-bold">Đã Phê Duyệt</span>
-                              ) : isWarning ? (
-                                <span className="px-2 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20 text-[9px] font-bold">Cần Bổ Sung</span>
-                              ) : (
-                                <span className="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[9px] font-bold">Chờ Thẩm Định</span>
-                              )}
-                            </td>
-                            <td className="p-3 text-right">
-                              <div className="inline-flex gap-1.5">
-                                <button 
-                                  onClick={() => changeStudentStatus(item.id, 'Đã phê duyệt')} 
-                                  className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded text-[10px] min-h-[30px] cursor-pointer"
-                                >
-                                  Duyệt
-                                </button>
-                                <button 
-                                  onClick={() => changeStudentStatus(item.id, 'Cần bổ sung hồ sơ')} 
-                                  className="px-2.5 py-1 bg-rose-600/20 hover:bg-rose-600 text-rose-400 hover:text-white rounded text-[10px] min-h-[30px] cursor-pointer"
-                                >
-                                  Y/C Sửa
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        );
-                      })
-                    )}
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Mobile Layout: Card Grid View */}
-              <div id="admin-submissions-mobile-cards" className="block lg:hidden divide-y divide-slate-800 p-3 space-y-3">
-                {registrations.length === 0 ? (
-                  <div className="p-6 text-center text-slate-500 text-xs">Chưa có hồ sơ tuyển sinh nào trực tuyến.</div>
-                ) : (
-                  registrations.map((item) => {
-                    const isApproved = item.status === 'Đã phê duyệt';
-                    const isWarning = item.status === 'Cần bổ sung hồ sơ';
-
-                    return (
-                      <div key={item.id} className="p-3.5 bg-slate-950/50 rounded-2xl border border-slate-800 space-y-3 text-xs pt-4">
-                        <div className="flex items-center justify-between gap-1.5 border-b border-slate-800/80 pb-2">
-                          <div>
-                            <span className="text-[9px] text-slate-500 font-bold block">MÃ BIÊN NHẬN</span>
-                            <span className="font-mono font-bold text-blue-400 text-sm">{item.id}</span>
-                          </div>
-                          <div>
-                            {isApproved ? (
-                              <span className="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-500/30 text-[9px] font-bold">Đã Phê Duyệt</span>
-                            ) : isWarning ? (
-                              <span className="px-2 py-0.5 rounded bg-rose-950 text-rose-400 border border-rose-500/30 text-[9px] font-bold">Cần Bổ Sung</span>
-                            ) : (
-                              <span className="px-2 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-500/30 text-[9px] font-bold">Chờ Thẩm Định</span>
-                            )}
-                          </div>
-                        </div>
-                        
-                        <div className="space-y-1.5 text-slate-300">
-                          <p><span className="text-slate-500">Học sinh:</span> <strong className="text-white">{item.studentName}</strong> ({item.studentGender} - {item.studentDob})</p>
-                          <p><span className="text-slate-500">Cư trú / MN:</span> <span className="text-orange-400 font-semibold">{item.studentArea}</span> | {item.studentSchool || 'Chưa rõ'}</p>
-                          <p><span className="text-slate-500">Phụ huynh:</span> {item.parentName} - <a href={`tel:${item.parentPhone}`} className="text-blue-400 hover:underline font-bold">{item.parentPhone}</a></p>
-                          
-                          <div className="flex flex-wrap gap-1.5 pt-1.5">
-                            <span className={`px-1.5 py-0.5 rounded text-[8px] font-semibold border ${
-                              item.birthCert === 'Có' ? 'bg-emerald-950 text-emerald-400 border-emerald-500/20' : 'bg-amber-950 text-amber-100 border-amber-500/20'
-                            }`}>
-                              Khai sinh: {item.birthCert}
-                            </span>
-                            <span className={`px-1.5 py-0.5 rounded text-[8px] font-semibold border ${
-                              item.preschoolCert === 'Có' ? 'bg-emerald-950 text-emerald-400 border-emerald-500/20' : 'bg-amber-950 text-amber-100 border-amber-500/20'
-                            }`}>
-                              Mầm non: {item.preschoolCert}
-                            </span>
-                            <span className={`px-1.5 py-0.5 rounded text-[8px] font-semibold border ${
-                              item.vaccine === 'Có' ? 'bg-emerald-950 text-emerald-400 border-emerald-500/20' : 'bg-amber-950 text-amber-100 border-amber-500/20'
-                            }`}>
-                              Tiêm chủng: {item.vaccine}
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="pt-2.5 border-t border-slate-800/80 flex justify-end gap-1.5">
-                          <button 
-                            onClick={() => changeStudentStatus(item.id, 'Cần bổ sung hồ sơ')} 
-                            className="flex-1 py-2 px-3 bg-rose-950/30 hover:bg-rose-900 border border-rose-900/40 text-rose-400 font-bold rounded-xl text-[10px] text-center min-h-[36px] cursor-pointer"
-                          >
-                            Yêu cầu sửa đổi
-                          </button>
-                          <button 
-                            onClick={() => changeStudentStatus(item.id, 'Đã phê duyệt')} 
-                            className="flex-1 py-2 px-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-[10px] text-center min-h-[36px] cursor-pointer"
-                          >
-                            Phê duyệt
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })
-                )}
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* Support Hotline & School Addresses */}
       <section className="py-12 sm:py-16 bg-white border-t border-slate-200/60 font-sans">
