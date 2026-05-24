@@ -1,6 +1,6 @@
 {
-  "name": "Ôn Thi Công Nghệ & Tin Học Tiểu Học",
-  "description": "Nền tảng ôn thi Học kỳ 2 môn Công nghệ và Tin học từ khối 3 đến khối 5, với giao diện hiện đại và thân thiện cho học sinh.",
+  "name": "Cổng Tuyển Sinh Lớp 1 Lương Thế Vinh",
+  "description": "Hệ thống cổng tiếp nhận và thẩm định hồ sơ trực tuyến tuyển sinh lớp 1 cho trẻ 5 tuổi - Trường Tiểu học Lương Thế Vinh - Đắk Song",
   "requestFramePermissions": [],
-  "majorCapabilities": []
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
