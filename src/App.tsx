@@ -604,21 +604,9 @@ export default function App() {
                 <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-orange-500 to-amber-400 rounded-t-3xl"></div>
                 
                 <div className="text-center">
-                  <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-orange-600 block">Thời gian nhận đăng ký Trực Tuyến</span>
-                  <h3 className="text-base sm:text-lg font-extrabold text-slate-900 mt-0.5">Hạn Cuối: 24/06/2026</h3>
+                  <span className="text-base sm:text-lg font-black uppercase tracking-wide text-orange-600 block">Hình thức đăng ký Online</span>
+                  <h3 className="text-sm sm:text-base font-extrabold text-slate-900 mt-1">Hạn Cuối: 24/06/2026</h3>
                   <p className="text-[10px] text-slate-400 mt-0.5">(Hệ thống tự động đóng cổng sau thời gian này)</p>
-                </div>
-
-                {/* Nộp hồ sơ trực tiếp Block */}
-                <div className="bg-amber-50 rounded-2xl p-4 border border-amber-200/60 text-slate-800 space-y-1.5 text-left shadow-sm">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-orange-500 shrink-0"></span>
-                    <h4 className="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-orange-700">Nộp hồ sơ trực tiếp</h4>
-                  </div>
-                  <p className="text-sm font-black text-slate-900">Từ ngày 25/06 đến hết 30/06/2026</p>
-                  <p className="text-[11px] sm:text-xs text-slate-600 leading-relaxed font-medium">
-                    Nộp đối chiếu hồ sơ trực tiếp vào buổi sáng các ngày trong tuần tại 2 điểm trường do ban tuyển sinh tiếp nhận.
-                  </p>
                 </div>
 
                 {/* Countdown Clock UI */}
@@ -662,6 +650,18 @@ export default function App() {
                 >
                   Đăng ký nhập học trực tuyến
                 </a>
+
+                {/* Nộp hồ sơ trực tiếp Block */}
+                <div className="bg-amber-50 rounded-2xl p-4 border border-amber-200/60 text-slate-800 space-y-1.5 text-left shadow-sm">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-orange-500 shrink-0"></span>
+                    <h4 className="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-orange-700">Hình thức nộp hồ sơ trực tiếp</h4>
+                  </div>
+                  <p className="text-sm font-black text-slate-900">Từ ngày 25/06 đến hết 30/06/2026</p>
+                  <p className="text-[11px] sm:text-xs text-slate-600 leading-relaxed font-medium">
+                    Nộp đối chiếu hồ sơ trực tiếp vào buổi sáng các ngày trong tuần tại 2 điểm trường do ban tuyển sinh tiếp nhận.
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -819,7 +819,7 @@ export default function App() {
                           required 
                           className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-base sm:text-sm outline-none transition-all min-h-[46px]"
                         >
-                          <option value="" disabled>Chọn trường mầm non cũ</option>
+                          <option value="" disabled>Chọn trường mầm non đã theo học</option>
                           <option value="Mầm non Vành Khuyên">Mầm non Vành Khuyên (Chỉ tiêu: 57)</option>
                           <option value="Mầm non Hoạ My">Mầm non Hoạ My (Chỉ tiêu: 63)</option>
                           <option value="Mẫu giáo khác">Trường mẫu giáo khác / Chưa đi học</option>
@@ -1175,7 +1175,7 @@ export default function App() {
                   <div className="space-y-1.5 text-slate-600 text-[11px] sm:text-xs">
                     <p><span className="font-semibold text-slate-900">Học sinh:</span> <span>{successData.studentName}</span></p>
                     <p><span className="font-semibold text-slate-900">Địa bàn thôn:</span> <span>{successData.studentArea}</span></p>
-                    <p><span className="font-semibold text-slate-900">Trường mầm non cũ:</span> <span>{successData.studentSchool}</span></p>
+                    <p><span className="font-semibold text-slate-900">Trường mầm non đã theo học:</span> <span>{successData.studentSchool}</span></p>
                     <p><span className="font-semibold text-slate-900">Số điện thoại liên hệ:</span> <span>{successData.parentPhone}</span></p>
                     <p className="flex items-center gap-1.5">
                       <span className="font-semibold text-slate-900">Trạng thái:</span> 
