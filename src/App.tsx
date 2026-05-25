@@ -575,8 +575,8 @@ export default function App() {
               </div>
               
               <h2 className="font-header text-2xl sm:text-5xl font-extrabold tracking-tight leading-tight text-white drop-shadow-md">
-                THÔNG BÁO TUYỂN SINH <br className="hidden sm:inline" />
-                <span className="text-amber-300">TRẺ 5 TUỔI VÀO LỚP 1</span>
+                Trường TH Lương Thế Vinh <br className="hidden sm:inline" />
+                <span className="text-amber-300">tuyển sinh trẻ vào lớp 1</span>
               </h2>
               
               <p className="text-xs sm:text-base text-blue-100 max-w-xl mx-auto lg:mx-0 font-medium">
@@ -1296,7 +1296,7 @@ export default function App() {
             </div>
             <div className="text-center md:text-right space-y-1">
               <p>&copy; 2026 Trường Tiểu học Lương Thế Vinh. Tất cả quyền được bảo lưu.</p>
-              <p className="text-[9px] sm:text-[10px] text-slate-600">Phát triển phần mềm tuyển sinh bởi Ban Chuyển Đổi Số Giáo Dục Đắk Song</p>
+              <p className="text-[9px] sm:text-[10px] text-slate-600">Phát triển tuyển sinh bởi Ban chuyển đổi số Trường TH Lương Thế Vinh</p>
             </div>
           </div>
         </div>
