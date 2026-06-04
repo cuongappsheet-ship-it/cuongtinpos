@@ -160,8 +160,8 @@ export default function App() {
       localStorage.removeItem('ltv_admin_session_expiry');
     }
 
-    // Countdown target: June 24, 2026, 17:00:00 (Vietnam local or server-relative)
-    const targetDate = new Date('2026-06-24T17:00:00').getTime();
+    // Countdown target: June 19, 2026, 17:00:00 (Vietnam local or server-relative)
+    const targetDate = new Date('2026-06-19T17:00:00').getTime();
 
     const interval = setInterval(() => {
       const now = new Date().getTime();
@@ -605,7 +605,7 @@ export default function App() {
                 
                 <div className="text-center">
                   <span className="text-base sm:text-lg font-black uppercase tracking-wide text-orange-600 block">Hình thức đăng ký Online</span>
-                  <h3 className="text-sm sm:text-base font-extrabold text-slate-900 mt-1">Hạn Cuối: 24/06/2026</h3>
+                  <h3 className="text-sm sm:text-base font-extrabold text-slate-900 mt-1">Từ 05/06 đến Hạn Cuối 19/06/2026</h3>
                   <p className="text-[10px] text-slate-400 mt-0.5">(Hệ thống tự động đóng cổng sau thời gian này)</p>
                 </div>
 
@@ -640,7 +640,7 @@ export default function App() {
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="font-medium text-[11px] sm:text-xs">Tuyển sinh trực tiếp tại trường:</span>
-                    <span className="font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-lg text-[11px]">25/06 - 30/06/2026</span>
+                    <span className="font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-lg text-[11px]">20/06 - 30/06/2026</span>
                   </div>
                 </div>
 
@@ -657,7 +657,7 @@ export default function App() {
                     <span className="w-2.5 h-2.5 rounded-full bg-orange-500 shrink-0"></span>
                     <h4 className="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-orange-700">Hình thức nộp hồ sơ trực tiếp</h4>
                   </div>
-                  <p className="text-sm font-black text-slate-900">Từ ngày 25/06 đến hết 30/06/2026</p>
+                  <p className="text-sm font-black text-slate-900">Từ ngày 20/06 đến ngày 30/06/2026</p>
                   <p className="text-[11px] sm:text-xs text-slate-600 leading-relaxed font-medium">
                     Nộp đối chiếu hồ sơ trực tiếp vào buổi sáng các ngày trong tuần tại 2 điểm trường do ban tuyển sinh tiếp nhận.
                   </p>
@@ -1255,7 +1255,7 @@ export default function App() {
             <div className="lg:col-span-6 bg-slate-50 p-5 sm:p-8 rounded-3xl border border-slate-200 flex flex-col justify-between">
               <div className="space-y-2">
                 <h4 className="font-header text-base sm:text-lg font-bold text-slate-900">Địa điểm thu hồ sơ trực tiếp</h4>
-                <p className="text-[11px] sm:text-xs text-slate-500">Đối với phụ huynh nộp trực tiếp từ 25/06 đến 30/06/2026, vui lòng mang hồ sơ gốc đối chứng tại 2 địa điểm:</p>
+                <p className="text-[11px] sm:text-xs text-slate-500">Đối với phụ huynh nộp trực tiếp từ 20/06 đến 30/06/2026, vui lòng mang hồ sơ gốc đối chứng tại 2 địa điểm:</p>
               </div>
 
               <div className="space-y-3 my-4 text-xs">
